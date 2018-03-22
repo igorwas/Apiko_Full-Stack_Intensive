@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Apiko Intensive. Homework. React Introduction</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.2.0/umd/react.development.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.2.0/umd/react-dom.development.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
+</head>
+<body>
+	<div id="root" ></div>
+    <script>
+		const app = React.createElement('div', { style: { backgroundColor: 'red' } }, [
+			    React.createElement('span', undefined, 'Hello world'),
+			    React.createElement('br'),
+			    'This is just a text node',
+			    React.createElement('div', undefined, 'Text content')
+			    /*змінив { textContent: 'Text content' },оскільки вибивало помилку,
+			    що не може розпізнати даний prop*/
+		  	]);
+
+		ReactDOM.render(
+			app,
+			document.getElementById('root'),
+		);
+
+    </script>
+</body>
+</html>
