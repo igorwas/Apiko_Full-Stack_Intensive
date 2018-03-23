@@ -10,10 +10,10 @@
 	<div id="root" ></div>
     <script>
 		const app = React.createElement('div', { style: { backgroundColor: 'red' } }, [
-			    React.createElement('span', undefined, 'Hello world'),
-			    React.createElement('br'),
+			    React.createElement('span',{ key: 'hello'}, 'Hello world'),
+			    React.createElement('br',{ key: 'newRow'}),
 			    'This is just a text node',
-			    React.createElement('div', undefined, 'Text content')
+			    React.createElement('div', { key: 'textCont'}, 'Text content')
 			    /*змінив { textContent: 'Text content' },оскільки вибивало помилку,
 			    що не може розпізнати даний prop*/
 		  	]);
