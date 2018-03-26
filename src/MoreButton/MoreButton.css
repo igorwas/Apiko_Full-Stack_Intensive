@@ -1,0 +1,13 @@
+.more {
+    background: transparent;
+    width: calc(100% - 40px);
+    padding: 10px;
+    margin: 20px;
+    font: 16px 'sans-serif';
+    border: 2px solid black;
+}
+
+.more:hover {
+    background: black;
+    color: white;
+}
