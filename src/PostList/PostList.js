@@ -12,7 +12,7 @@ class PostList extends Component {
         return (
             <ul className='PostList'>
                 {data.map((post, index) => {
-                    if (post.title.startsWith(this.props.postTitle) && index < this.props.amountOfPosts) {
+                    if (post.title.startsWith(this.props.postTitle) && realAmountOfPosts < this.props.amountOfPosts) {
                         realAmountOfPosts = realAmountOfPosts+1;
                         return <Post id={post.id} title={post.title}/>
                     }
