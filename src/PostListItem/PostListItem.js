@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import './PostListItem.css';
 
 class PostListItem extends Component {
+    shouldComponentUpdate(nextProps){
+        return this.props.id !== nextProps.id;
+    }
+
     render() {
         return (
             <li className='PostListItem' id={`post_${this.props.id}`}>

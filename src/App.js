@@ -14,11 +14,9 @@ class App extends Component {
 
     loadMore() {
         const amountsOfPosts = this.state.amountsOfPosts;
-        console.log((amountsOfPosts))
         this.setState({
-            amountsOfPosts: amountsOfPosts+10
+            amountsOfPosts: amountsOfPosts + 10
         })
-        console.log(this.state.amountsOfPosts);
     }
 
     searchByTitle({ target }){
@@ -28,7 +26,7 @@ class App extends Component {
     render() {
         return (
             <Fragment>
-                <h1>Homework #4.React Forms</h1>
+                <h1>Homework #5.React Component Lifecycle</h1>
                 <Search onChange={this.searchByTitle}/>
                 <PostList amountOfPosts={this.state.amountsOfPosts}
                           postTitle={this.state.searchByTitle}/>

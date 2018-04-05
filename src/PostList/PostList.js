@@ -1,17 +1,35 @@
 import React, {Component} from 'react';
 import Post from '../PostListItem/PostListItem'
-import data from '../data';
 import PropTypes from 'prop-types';
 import './PostList.css'
 import NoItemsFound from '../NoItemsFound/NoItemsFound'
 
+const API_POSTS='https://jsonplaceholder.typicode.com/posts';
+
 class PostList extends Component {
+    constructor(){
+        super();
+        this.state = {
+            posts: []
+        }
+    }
+    fetchPosts(){
+        fetch(API_POSTS)
+            .then(response => response.json())
+            .then(postsFromAPI => this.setState({posts: postsFromAPI }))
+    }
+
+    componentDidMount(){
+        this.fetchPosts();
+        setInterval(()=>this.fetchPosts(),10000, true);
+    }
 
     render() {
+        const posts = this.state.posts;
         let realAmountOfPosts=0;
         return (
             <ul className='PostList'>
-                {data.map((post, index) => {
+                {posts.map((post, index) => {
                     if (post.title.startsWith(this.props.postTitle) && realAmountOfPosts < this.props.amountOfPosts) {
                         realAmountOfPosts = realAmountOfPosts+1;
                         return <Post id={post.id} title={post.title}/>
