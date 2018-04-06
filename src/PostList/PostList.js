@@ -1,8 +1,9 @@
-import React, {Component} from 'react';
-import Post from '../PostListItem/PostListItem'
-import PropTypes from 'prop-types';
+import React, {Component, Fragment} from 'react';
 import './PostList.css'
+import Post from '../PostListItem/PostListItem'
 import NoItemsFound from '../NoItemsFound/NoItemsFound'
+import MoreButton from '../MoreButton/MoreButton';
+import Loader from'../Loader/Loader'
 
 const API_POSTS='https://jsonplaceholder.typicode.com/posts';
 
@@ -10,44 +11,53 @@ class PostList extends Component {
     constructor(){
         super();
         this.state = {
-            posts: []
+            amountsOfPosts: 10,
+            posts: [],
+            isLoading: true
         }
+        this.loadMore = this.loadMore.bind(this);
+    }
+    loadMore() {
+        const amountsOfPosts = this.state.amountsOfPosts;
+        this.setState({
+            amountsOfPosts: amountsOfPosts + 10
+        })
     }
     fetchPosts(){
-        fetch(API_POSTS)
-            .then(response => response.json())
-            .then(postsFromAPI => this.setState({posts: postsFromAPI }))
+        setTimeout(()=>{
+            fetch(API_POSTS)
+                .then(response => response.json())
+                .then(postsFromAPI => this.setState({posts: postsFromAPI , isLoading: false }))
+            },3000)
     }
 
     componentDidMount(){
         this.fetchPosts();
-        setInterval(()=>this.fetchPosts(),10000, true);
+        setInterval(()=>this.fetchPosts(),10000);
     }
 
     render() {
-        const posts = this.state.posts;
+        const {posts, isLoading, amountsOfPosts} = this.state;
+        if(isLoading){
+            return <Loader />
+        }
         let realAmountOfPosts=0;
         return (
-            <ul className='PostList'>
-                {posts.map((post, index) => {
-                    if (post.title.startsWith(this.props.postTitle) && realAmountOfPosts < this.props.amountOfPosts) {
-                        realAmountOfPosts = realAmountOfPosts+1;
-                        return <Post id={post.id} title={post.title}/>
-                    }
-                    return "";
-                })}
-                { (realAmountOfPosts===0) ? <NoItemsFound/> : ""}
-            </ul>
+            <Fragment>
+                <ul className='PostList'>
+                    {posts.map((post, index) => {
+                        if (post.title.startsWith(this.props.postTitle) && realAmountOfPosts < amountsOfPosts) {
+                            realAmountOfPosts = realAmountOfPosts+1;
+                            return <Post id={post.id} title={post.title}/>
+                        }
+                        return "";
+                        })}
+                </ul>
+                {(realAmountOfPosts === 0) ? <NoItemsFound/> : "" }
+                {(realAmountOfPosts >= 10 ) ? <MoreButton onClick={this.loadMore}/> : "" }
+            </Fragment>
         )
     }
 }
-
-PostList.propTypes = {
-    amountsOfPosts: PropTypes.number
-};
-
-PostList.defaultProps = {
-    amountsOfPosts: 10
-};
 
 export default PostList;
