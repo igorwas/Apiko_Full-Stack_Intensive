@@ -1,15 +1,53 @@
-import { compose, withStateHandlers, withHandlers, lifecycle, branch, renderComponent } from 'recompose';
+import { compose, withStateHandlers, withHandlers, lifecycle, branch, renderComponent, withProps } from 'recompose';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { db } from '../../utils';
 
 import AppLoader from '../Loaders/AppLoader';
 import Component from './Component';
+import * as R from "ramda";
 
 const mapStateToProps = state => ({
   user: state.user,
-  // TODO: CODE FOR YOUR HOMEWORK HERE
+  sortBy: state.answerSort
 });
+
+const sortWith = sortParams => R.sortWith([R.descend(sortParams)]);
+
+const divideVotes = R.pipe(
+    R.groupBy(R.prop('answerId')),
+    R.mapObjIndexed(
+        R.pipe(
+            R.groupBy(
+                R.ifElse(
+                    R.prop('isPositive'),
+                    R.always('positive'),
+                    R.always('negative')
+                )
+            ),
+            R.mapObjIndexed(R.length)
+        )
+    )
+);
+
+const prepareAnswers = ({ answers, votes, sortBy }) => {
+    const vote = divideVotes(votes);
+
+    switch (sortBy) {
+        case 'best':
+            return sortWith(({ _id }) => (vote[_id] && vote[_id].positive) || 0)(
+                answers
+            );
+
+        case 'worst':
+            return sortWith(({ _id }) => (vote[_id] && vote[_id].negative) || 0)(
+                answers
+            );
+
+        default:
+            return sortWith(R.prop(sortBy))(answers);
+    }
+};
 
 const enhance = compose(
   connect(mapStateToProps),
@@ -43,6 +81,8 @@ const enhance = compose(
     ({ isFetching }) => isFetching,
     renderComponent(AppLoader)
   ),
+
+  withProps(props => ({ answers: prepareAnswers(props) })),
 
   withHandlers({
     onVote: ({ user }) => (answerId, isPositive) => {
