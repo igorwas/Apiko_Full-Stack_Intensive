@@ -12,6 +12,7 @@ const models = { User, Question, Answer, Vote };
 const questions = require('../controllers/questions');
 const answers = require('../controllers/answers');
 const votes = require('../controllers/votes');
+const auth = require('../controllers/auth');
 
 const routersInit = config => {
     const router = express();
@@ -19,6 +20,7 @@ const routersInit = config => {
     router.use('/questions', questions(models, {config}));
     router.use('/answers', answers(models, {config}));
     router.use('/votes', votes(models, {config}));
+    router.use('/auth', auth(models, {config}));
 
     router.use(errorHandler);
     return router;

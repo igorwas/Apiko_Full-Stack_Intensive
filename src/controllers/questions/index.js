@@ -5,7 +5,8 @@ const { list } = require('./list');
 const { create } = require('./create');
 const { update } = require('./update');
 const { remove } = require('./remove');
-const { getAnswers} = require('./getAnswers')
+const { getAnswers } = require('./getAnswers')
+const { authenticate } = require('../../middleware')
 
 /**
  * Provide api for questions
@@ -25,12 +26,12 @@ const { getAnswers} = require('./getAnswers')
 module.exports = (models, { config }) => {
     const api = router();
 
-    api.get('/', list(models, { config }));
+    api.get('/', authenticate, list(models, { config }));
     api.get('/:_id', get(models, { config }));
     api.use('/:_id/answers', getAnswers(models, { config }));
-    api.post('/', create(models, { config }));
-    api.patch('/:_id', update(models, { config }));
-    api.delete('/:_id', remove(models, { config }));
+    api.post('/',authenticate, create(models, { config }));
+    api.patch('/:_id',authenticate, update(models, { config }));
+    api.delete('/:_id',authenticate, remove(models, { config }));
 
     return api;
 };

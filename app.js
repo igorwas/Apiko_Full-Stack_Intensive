@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const config = require('./config');
 const { MongoManager } = require('./src/mongo');
+const { passport } = require('./src/passport');
 const api = require('./src/api')
 const app = express();
 const mongoManager = new MongoManager(config);
@@ -12,6 +13,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 mongoManager.connect();
+//auth
+app.use(passport.initialize());
 
 app.use('/api/v1', api(config));
 
