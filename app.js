@@ -16,6 +16,12 @@ mongoManager.connect();
 //auth
 app.use(passport.initialize());
 
+app.use(express.static(path.join(__dirname, 'public/build')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, './public/build/', 'index.html'));
+});
+
 app.use('/api/v1', api(config));
 
 // catch 404 and forward to error handler
